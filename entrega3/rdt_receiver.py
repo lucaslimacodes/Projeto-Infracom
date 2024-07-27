@@ -28,6 +28,7 @@ class RDT_receiver(udp.UDP):
                     self.send(self.transmiter, bytes([1]))
                 else:
                     self.receiveBuffer.append(data[1:])
+                    print("dado recebido: ", data[1:])
                     self.send(self.transmiter, bytes([0]))
                     self.state = WAIT_PKT_1
             elif(self.state == WAIT_PKT_1):
@@ -41,5 +42,6 @@ class RDT_receiver(udp.UDP):
                     self.send(self.transmiter, bytes([1]))
                     self.state = WAIT_PKT_0          
 
+        print("receiver finalizado")
                     
                  

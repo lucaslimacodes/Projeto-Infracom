@@ -4,6 +4,7 @@ import time
 class UDP():
     def __init__(self, sckt_family, sckt_type, sckt_binding, MAX_BUFF):
         self.sckt = skt.socket(sckt_family, sckt_type)
+        self.sckt.setsockopt(skt.SOL_SOCKET, skt.SO_REUSEADDR, 1)
         self.sckt.bind(sckt_binding)
 
         if self.sckt is None:
@@ -14,6 +15,10 @@ class UDP():
     def send(self, server_addr: tuple[str, int], msg: bytes):
         self.sckt.sendto(msg, server_addr)
         time.sleep(0.0001)
+    
+    def listenOne(self):
+        return self.sckt.recvfrom(self.MAX_BUFF)
+        
 
 
 

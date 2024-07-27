@@ -35,7 +35,7 @@ class RDT_transmiter(udp.UDP):
     def setMessageString(self, message : str):
         messageByte = message.encode()
         if(len(message) <= 1023):
-            self.sendBuffer[0] = bytes([0]) + messageByte
+            self.sendBuffer.append(bytes([0]) + messageByte)
         else:
             chunks = []
             for i in range(0, len(messageByte), 1023):
@@ -94,6 +94,7 @@ class RDT_transmiter(udp.UDP):
                     self.state = SEND_PKT_0
 
         self.send(self.receiver, b"Done")
+        print("transmiter finalizado")
 
 
 
