@@ -100,6 +100,7 @@ class rdt_Entity():
                     self.transmiterState = SEND_PKT_0
                 else:
                     print("não foi timeout pois")
+                    print("transmiter poa: ", self.Rx)
                     if self.Rx[0] == bytes([0]):
                         print("ack recebido")
                         self.transmiterState = SEND_PKT_1
@@ -122,16 +123,18 @@ class rdt_Entity():
                 self.RxLock.acquire()
                 wasTout = True
                 if len(self.Rx) == 0:
-                    wasTout = self.RxCondition.wait_for(self.isRxNotEmpty, timeout=1.0)
+                    wasTout = self.RxCondition.wait(timeout=1.0)
                 if wasTout == False:
                     print("timeout")
                     self.transmiterState = SEND_PKT_1
                 else:
+                    print("não foi timeout pois")
+                    print("transmiter poa: ", self.Rx)
                     if self.Rx[0] == bytes([1]):
                         print("ack recebido")
                         self.transmiterState = SEND_PKT_0
                         self.transmiterBuffer.pop(0)
-                        self.state = None
+                        self.state = NONE
                         self.stateCondition.notify()
                     else:
                         print("wrong ack")
@@ -159,6 +162,7 @@ class rdt_Entity():
                 #print(a,b,c)
                 #print(self.Rx)
                 print("receiver dormindo no rx")
+                print(self.Rx)
                 self.RxCondition.wait()
             print("receiver acordou no rx")
             self.stateLock.acquire()
@@ -182,6 +186,7 @@ class rdt_Entity():
                     self.TxLock.release()
                     self.ReceiverBufferLock.acquire()
                     self.ReceiverBuffer.append(self.Rx[0][1:])
+                    print("receba:" ,self.ReceiverBuffer)
                     self.ReceiverBufferCondition.notify()
                     self.ReceiverBufferLock.release()
                     self.receiverState = WAIT_PKT_1
@@ -203,6 +208,7 @@ class rdt_Entity():
                     self.TxLock.release()
                     self.ReceiverBufferLock.acquire()
                     self.ReceiverBuffer.append(self.Rx[0][1:])
+                    print("receba", self.ReceiverBuffer)
                     self.ReceiverBufferCondition.notify()
                     self.ReceiverBufferLock.release()
                     self.receiverState = WAIT_PKT_0

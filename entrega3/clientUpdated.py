@@ -28,7 +28,7 @@ def Rx():
         data, source = client_rdt.socket.recvfrom(1024)
         client_rdt.RxLock.acquire()
         client_rdt.Rx.append(data)
-        client_rdt.RxCondition.notify()
+        client_rdt.RxCondition.notify_all()
         client_rdt.RxLock.release()
 
 RxThread = threading.Thread(target=Rx)
@@ -43,5 +43,5 @@ while True:
         client_rdt.ReceiverBuffer.pop(0)
     client_rdt.ReceiverBufferLock.release()
     client_rdt.addMessageToTransmit("oRola")
-    time.sleep(1)
+    time.sleep(5)
     

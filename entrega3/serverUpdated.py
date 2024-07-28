@@ -27,7 +27,7 @@ def Rx():
         print("dado recebido: ", data)
         server_rdt.RxLock.acquire()
         server_rdt.Rx.append(data)
-        server_rdt.RxCondition.notify()
+        server_rdt.RxCondition.notify_all()
         server_rdt.RxLock.release()
 
 RxThread = threading.Thread(target=Rx)
@@ -42,7 +42,7 @@ while True:
     print("cu:", server_rdt.ReceiverBuffer[0])
     server_rdt.ReceiverBuffer.pop(0)
     server_rdt.ReceiverBufferLock.release()
-    if i >= 5:
+    if i >= 4:
         server_rdt.addMessageToTransmit("rolinhas")
         i=0
     i = i + 1
